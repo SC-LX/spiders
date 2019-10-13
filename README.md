@@ -1,2 +1,2 @@
 # spiders
-small game i am making to have a deeper understanding of nodeJS, websockets and vanilla JS
+small game I am making to have a deeper understanding of nodeJS, websockets and vanilla JS. Based on an old GameBoy game I don't remember the name.
