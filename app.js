@@ -29,12 +29,14 @@ var Player = function(id) {
         pressingUp: false,
         pressingDown: false,
         maxSpeed: 10,
-        lastPressedKey: 'up' // pour pouvoir mettre la vitesse à 0 si on presse la direction opposée
+        lastPressedKey: 'up', // pour pouvoir mettre la vitesse à 0 si on presse la direction opposée
+        touchingBorder: false // pas besoin de ramener la vitesse a 0 si on touche un bord et qu'on veut repartir en direction opposee
+
     }
     self.updatePosition = function() {
         // DROITE
         if (self.pressingRight) {
-            if (self.lastPressedKey == 'left') {  // vitesse à 0 si on presse 1 fois la direction opposée
+            if (self.lastPressedKey == 'left' && self.touchingBorder == false) {  // vitesse à 0 si on presse 1 fois la direction opposée
                 self.x += 0;
                 self.pressingRight = false;
             } else {
@@ -44,7 +46,7 @@ var Player = function(id) {
         }
         // GAUCHE
         if (self.pressingLeft) {
-            if (self.lastPressedKey == 'right') {
+            if (self.lastPressedKey == 'right' && self.touchingBorder == false) {
                 self.x += 0;
                 self.pressingLeft = false;
             } else {
@@ -54,7 +56,7 @@ var Player = function(id) {
         }
         // HAUT
         if (self.pressingUp) {
-            if (this.lastPressedKey == 'down') {
+            if (this.lastPressedKey == 'down' && self.touchingBorder == false) {
                 self.y += 0;
                 self.pressingUp = false;
             } else {
@@ -64,7 +66,7 @@ var Player = function(id) {
         }
         // BAS
         if (self.pressingDown) {
-            if (self.lastPressedKey == 'up') {
+            if (self.lastPressedKey == 'up' && self.touchingBorder == false) {
                 self.y += 0;
                 self.pressingDown = false;
             } else {
@@ -72,7 +74,23 @@ var Player = function(id) {
             }
             self.lastPressedKey = 'down';
         }
-    }
+        // COLLISIONS
+        if (self.x >= 500 - self.hitbox)
+            self.x = 500 - self.hitbox;
+        if (self.x <= 0)
+            self.x = 0;
+        if (self.y >= 500 - self.hitbox)
+            self.y = 500 - self.hitbox;
+        if (self.y <= 0)
+            self.y = 0;
+        // si on touche un bord, pas besoin d'appuyer 2 fois pour repartir en sens inverse
+        if (self.x >= 500 - self.hitbox || self.x <= 0 || self.y >= 500 - self.hitbox || self.y <= 0) {
+            self.touchingBorder = true;
+        } else {
+            self.touchingBorder = false;
+        }
+
+    } // fin function self.updatePosition
     return self;
 }
 
