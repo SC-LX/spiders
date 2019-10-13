@@ -20,16 +20,16 @@ var PLAYER_LIST = {};
 var Player = function(id) {
     var self = {
         x: 250, // horizontal
-        y: 499, // vertical
+        y: 250, // vertical
         id: id,
-        number: "" + Math.floor(10 * Math.random()),
+        color: "#"+((1<<24)*Math.random()|0).toString(16),
+        hitbox: 12,
         pressingRight: false,
         pressingLeft: false,
         pressingUp: false,
         pressingDown: false,
         maxSpeed: 10,
         lastPressedKey: 'up' // pour pouvoir mettre la vitesse à 0 si on presse la direction opposée
-
     }
     self.updatePosition = function() {
         // DROITE
@@ -139,7 +139,8 @@ setInterval(function() {
         pack.push({
             x: player.x,
             y: player.y,
-            number: player.number
+            hitbox: player.hitbox,
+            color: player.color
         });
     }
 
@@ -149,4 +150,4 @@ setInterval(function() {
     }
 
 
-}, 1000/25);
+}, 1000/15);
