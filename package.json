@@ -1,0 +1,10 @@
+{
+    "name": "projet02",
+    "version": "0.1.0",
+    "dependencies": {
+        "express": "^4.11.2",
+        "socket.io": "^2.2.0"
+    },
+    "author": "Sev",
+    "description": "jeu multi 2eme essai"
+}
