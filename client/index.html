@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Projet02</title>
+</head>
+<body>
+    <canvas id="ctx" width="500" height="500" style="border:1px solid #000000"></canvas>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        var ctx = document.getElementById("ctx").getContext("2d");
+        ctx.font = "30px Arial";
+        var socket = io();
+
+        socket.on('new_positions', function(data) {
+            ctx.clearRect(0,0,500,500);
+            for (var i = 0; i < data.length; i++) {
+                ctx.fillText(data[i].number, data[i].x, data[i].y);
+            }
+        });
+
+        // document.onkeydown = function (event) {
+        //     console.log(event.keyCode);
+        //     if (event.keyCode === 68) //d 68 - 100
+        //         socket.emit('keyPress', {inputId:'right', state:true});
+        //     if (event.keyCode === 81) //q 81 - 113
+        //         socket.emit('keyPress', {inputId:'left', state:true});
+        //     if (event.keyCode === 90) //z 90 - 122
+        //         socket.emit('keyPress', {inputId:'up', state:true});
+        //     if (event.keyCode === 83) //s 83 - 115
+        //         socket.emit('keyPress', {inputId:'down', state:true});
+        // }
+        // document.onkeyup = function (event) {
+        //     if (event.keyCode === 68) //d
+        //         socket.emit('keyPress', {inputId:'right', state:true});
+        //     if (event.keyCode === 81) //q
+        //         socket.emit('keyPress', {inputId:'left', state:true});
+        //     if (event.keyCode === 90) //z
+        //         socket.emit('keyPress', {inputId:'up', state:true});
+        //     if (event.keyCode === 83) //s
+        //         socket.emit('keyPress', {inputId:'down', state:true});
+        // }
+
+        document.onkeypress = function (event) {
+            console.log(event.keyCode);
+            if (event.keyCode === 100) //d 68 - 100
+                socket.emit('keyPress', {inputId:'right', state:true});
+            if (event.keyCode === 113) //q 81 - 113
+                socket.emit('keyPress', {inputId:'left', state:true});
+            if (event.keyCode === 122) //z 90 - 122
+                socket.emit('keyPress', {inputId:'up', state:true});
+            if (event.keyCode === 115) //s 83 - 115
+                socket.emit('keyPress', {inputId:'down', state:true});
+        }
+
+
+
+    </script>
+</body>
+</html>
