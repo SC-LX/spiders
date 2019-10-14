@@ -16,21 +16,32 @@ console.log('server started.');
 var SOCKET_LIST = {};
 var PLAYER_LIST = {};
 
+
+// PLATEAU DE JEU
+var PLATEAU = {};
+PLATEAU.side = 600; // TODO changer automatiquement le canvas
+
+// territoires des joueurs
+// pour chaque nouveau joueur on rajoute une entrée dans la variable avec son id, comme TERRITOIRES[socket.id]
+// et dans chaque entrée on liste ses possessions : TERRITOIRES[socket.id][blabla]
+var TERRITOIRES = {};
+
 // CLASS PLAYER
 var Player = function(id) {
     var self = {
-        x: 250, // horizontal
-        y: 250, // vertical
+        x: PLATEAU.side / 2, // horizontal
+        y: PLATEAU.side, // vertical
         id: id,
         color: "#"+((1<<24)*Math.random()|0).toString(16),
-        hitbox: 12,
+        hitbox: 6,
         pressingRight: false,
         pressingLeft: false,
         pressingUp: false,
         pressingDown: false,
         maxSpeed: 10,
         lastPressedKey: 'up', // pour pouvoir mettre la vitesse à 0 si on presse la direction opposée
-        touchingBorder: false // pas besoin de ramener la vitesse a 0 si on touche un bord et qu'on veut repartir en direction opposee
+        touchingBorder: true, // pas besoin de ramener la vitesse a 0 si on touche un bord et qu'on veut repartir en direction opposee
+        is_outside: false // si = true on est en train de tisser une toile, sinon on est sur un bord
 
     }
     self.updatePosition = function() {
@@ -74,21 +85,29 @@ var Player = function(id) {
             }
             self.lastPressedKey = 'down';
         }
+
         // COLLISIONS
-        if (self.x >= 500 - self.hitbox)
-            self.x = 500 - self.hitbox;
+        if (self.x >= PLATEAU.side - self.hitbox)
+            self.x = PLATEAU.side - self.hitbox;
         if (self.x <= 0)
             self.x = 0;
-        if (self.y >= 500 - self.hitbox)
-            self.y = 500 - self.hitbox;
+        if (self.y >= PLATEAU.side - self.hitbox)
+            self.y = PLATEAU.side - self.hitbox;
         if (self.y <= 0)
             self.y = 0;
+
+         // TODO améliorer ce truc de collisions
         // si on touche un bord, pas besoin d'appuyer 2 fois pour repartir en sens inverse
-        if (self.x >= 500 - self.hitbox || self.x <= 0 || self.y >= 500 - self.hitbox || self.y <= 0) {
+        if (self.x >= PLATEAU.side - self.hitbox || self.x <= 0 || self.y >= PLATEAU.side - self.hitbox || self.y <= 0) {
             self.touchingBorder = true;
         } else {
             self.touchingBorder = false;
         }
+        // valeur générale pour déterminer si on se trouve sur un bord ou pas (et si on n'est pas sur un bord on peut tisser une toile)
+        if ((self.pressingRight === true || self.pressingLeft === true || self.pressingUp === true || self.pressingDown === true) && self.touchingBorder === false)
+            self.is_outside = true;
+        else
+            self.is_outside = false;
 
     } // fin function self.updatePosition
     return self;
@@ -103,10 +122,12 @@ io.sockets.on('connection', function(socket) {
     SOCKET_LIST[socket.id] = socket;
     var player = new Player(socket.id);
     PLAYER_LIST[socket.id] = player;
+    TERRITOIRES[socket.id] = [];
     // déconnection d'un joueur, on le supprime des tableaux
     socket.on('disconnect', function() {
         delete SOCKET_LIST[socket.id];
         delete PLAYER_LIST[socket.id];
+        // on ne supprime pas les territoires car ca ferait des trous dans le plateau
     });
 
 
@@ -141,8 +162,8 @@ io.sockets.on('connection', function(socket) {
             player.pressingUp = false;
             player.pressingRight = false;
         }
-    });
-});
+    }); // fin on keypress
+}); // fin io.socket on connection
 
 
 

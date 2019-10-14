@@ -7,17 +7,18 @@
     <title>Projet02</title>
 </head>
 <body>
-    <canvas id="ctx" width="500" height="500" style="border:1px solid #000000"></canvas>
+    <canvas id="ctx" width="600" height="600" style="border:1px solid #000000"></canvas>
 
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
+
         var ctx = document.getElementById("ctx").getContext("2d");
         ctx.font = "30px Arial";
         var socket = io();
 
         socket.on('new_positions', function(data) {
-            ctx.clearRect(0,0,500,500);
+            ctx.clearRect(0,0,600,600);
             for (var i = 0; i < data.length; i++) {
                 ctx.fillStyle = data[i].color;
                 ctx.fillRect(data[i].x, data[i].y, data[i].hitbox, data[i].hitbox);

@@ -1,0 +1,35 @@
+ // PRIORITE 1
+
+ - faire le systeme de territoires :
+    si le joueur ne touche pas un bord, il est en train de tisser une toile
+        - déterminer le point de départ (listener lorsqu'on 'décolle' ?) - utiliser is_outside et touchingBorder
+        - déterminer les angles (changements de direction)
+        - calculer les aires possédées par chaque joueur - parallélépipède le plus petit
+- mouvements
+    - le joueur doit s'arreter lorsqu'il arrive de l'interieur sur un bord
+    - permettre le passage sur les frontières de territoires
+
+-> piste : Class territoire
+
+// PRIORITE 2
+
+- scores
+    - conditions de victoire
+    - couleurs territoires = variantes couleur pion
+
+
+
+// PRIORITE 3
+
+- faire en sorte que la taille du canvas en html s'adapte automatiquement si on change PLATEAU.side
+
+
+
+// DANS LE TURFU
+
+- chat
+- salle d'attente
+- login des joueurs
+- regles pvp
+- base de données
+
